@@ -1,0 +1,33 @@
+# La commande From permet d'importer une image du docker hub,
+# ici on importe l'image ubuntu
+# Le mot clé as permet de nommer l'image
+FROM ubuntu:latest as base
+
+# EN permet de déclarer une variable d'environnement
+# ici on déclare une variable MY_ENV_VAR
+ENV MY_ENV_VAR="Hello World"
+
+# la commande WORKDIR de créer un dossier dans le système de fichiers. Le dossier est crée si il n'existe pas
+# ici on creer le dossier /user/src/app
+# Ce dossier sera utilisé comme dossier cible pour toutes les commandes qui le suivent
+WORKDIR /user/src/app
+
+# La commande RUN permet d'installer des packages, des dépendances ou des commandes qui seront lues par le conteneur
+# ici on install curl
+RUN ap-get update && \
+    ap-get install -y curl && \
+    rm -rf /var/lib/apt/lists/*
+
+
+# La commande COPY permet de copier des fichiers dans le container (donc dans le dossier défini par WORKDIR)
+# ici on y copie le fichier demo.txt
+COPY demo.txt .
+
+# ici on y copie le fichier demo 2.txt dans le dossier test du conteneur
+# il faut s'assurer d'aborder le dossier test du conteneur existe d'abord, sinon le créer
+
+# Crée le dossier /user/src/app/test
+RUN mkdir -p test
+COPY ./test/demo2.txt /test
+
+CMD echo "My environment variable is ${MY_ENV_VAR}"
